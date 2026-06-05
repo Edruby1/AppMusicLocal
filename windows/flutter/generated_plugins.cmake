@@ -3,11 +3,17 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+<<<<<<< HEAD
   permission_handler_windows
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
   jni
+=======
+)
+
+list(APPEND FLUTTER_FFI_PLUGIN_LIST
+>>>>>>> 0639d280ad74d365bc326cc8b2eb593408249163
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)
