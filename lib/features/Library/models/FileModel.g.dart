@@ -17,18 +17,21 @@ class FileModelAdapter extends TypeAdapter<FileModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return FileModel(
-      fields[0] as String,
-      fields[1] as String,
+      id: fields[0] as int,
+      name: fields[1] as String,
+      path: fields[2] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, FileModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
-      ..write(obj.name)
+      ..write(obj.id)
       ..writeByte(1)
+      ..write(obj.name)
+      ..writeByte(2)
       ..write(obj.path);
   }
 
