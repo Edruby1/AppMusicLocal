@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:app_local_music/core/logger/AppError.dart';
+import 'package:app_local_music/core/logger/AppLogger.dart';
 import 'package:app_local_music/features/Library/models/FileModel.dart';
 import 'package:hive_flutter/adapters.dart';
 
-class Filerepository {
+class FileRepository {
   static final Box<FileModel> _box = Hive.box<FileModel>("files");
 
   static Future<List<FileModel>> getAllFiles() async {
@@ -41,5 +44,13 @@ class Filerepository {
         break;
       }
     }
+  }
+
+  static Future<FileModel> pickRandom() async {
+    final List<FileModel> songs = _box.values.toList();
+    AppLogger.info(songs.length.toString());
+    final random = Random();
+    final FileModel song = songs[random.nextInt(songs.length)];
+    return song;
   }
 }
