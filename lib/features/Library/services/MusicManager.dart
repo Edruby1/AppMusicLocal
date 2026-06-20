@@ -9,22 +9,18 @@ class MusicManager {
 
   static FileModel? _actualSong;
 
-  static Duration? _duration;
-
-  static Duration? _position;
-
   static MusicStatus _status = MusicStatus.stopped;
 
   static FileModel? get song => _actualSong;
 
-  static Duration? get duration => _duration;
+  static Stream<Duration?> get duration => _player.durationStream;
+
+  static Stream<Duration?> get position => _player.positionStream;
 
   static MusicStatus get status => _status;
 
-  static Duration? get position => _position;
-
   static Future<void> play({required FileModel song}) async {
-    await _player.setUrl(song.path);
+    await _player.setFilePath(song.path);
     await _player.play();
     _actualSong = song;
     _status = MusicStatus.playing;
@@ -41,9 +37,11 @@ class MusicManager {
     await _player.stop();
     _status = MusicStatus.stopped;
     _actualSong = null;
-    _duration = null;
-    _position = null;
     AppLogger.info("stoping song");
+  }
+
+  static Future<void> seek(Duration pos) async {
+    await _player.seek(pos);
   }
 
   static Future<void> resume() async {
