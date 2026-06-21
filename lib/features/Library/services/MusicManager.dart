@@ -21,7 +21,7 @@ class MusicManager {
 
   static Future<void> play({required FileModel song}) async {
     await _player.setFilePath(song.path);
-    await _player.play();
+    _player.play();
     _actualSong = song;
     _status = MusicStatus.playing;
     AppLogger.info("playing ${song.name}");

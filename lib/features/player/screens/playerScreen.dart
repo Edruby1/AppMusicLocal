@@ -79,6 +79,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
             ),
             IconButton(
               onPressed: () async {
+                AppLogger.info("0");
                 if (actualState == MusicStatus.playing) {
                   await MusicManager.pause();
                   setState(() {
@@ -94,6 +95,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   final status = await Permission.audio.request();
                   if (status == PermissionStatus.granted) {
                     final FileModel song = await FileRepository.pickRandom();
+                    AppLogger.info(song.id);
                     await MusicManager.play(song: song);
                     setState(() {
                       actualState = MusicStatus.playing;
