@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:app_local_music/core/logger/AppLogger.dart';
 import 'package:app_local_music/features/Library/models/FileModel.dart';
 import 'package:app_local_music/features/Library/repository/FileRepository.dart';
 import 'package:app_local_music/features/Library/services/MusicManager.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -79,7 +76,6 @@ class _PlayerScreenState extends State<PlayerScreen> {
             ),
             IconButton(
               onPressed: () async {
-                AppLogger.info("0");
                 if (actualState == MusicStatus.playing) {
                   await MusicManager.pause();
                   setState(() {
@@ -91,15 +87,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
                     actualState = MusicStatus.playing;
                   });
                 } else {
-                  AppLogger.info("1");
                   final status = await Permission.audio.request();
                   if (status == PermissionStatus.granted) {
-                    final FileModel song = await FileRepository.pickRandom();
-                    AppLogger.info(song.id);
-                    await MusicManager.play(song: song);
+                    MusicManager.play();
+                    await Future.delayed(const Duration(milliseconds: 500));
                     setState(() {
+                      if (!MusicManager.isPlaying) return;
                       actualState = MusicStatus.playing;
-                      AppLogger.info("2");
                     });
                   }
                 }

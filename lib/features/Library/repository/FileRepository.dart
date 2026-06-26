@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:app_local_music/core/logger/AppError.dart';
@@ -50,13 +51,18 @@ class FileRepository {
     }
   }
 
-  static Future<FileModel> pickRandom() async {
+  static Future<FileModel?> pickRandom() async {
     final List<FileModel> songs = _box.values.toList();
     AppLogger.info(songs.length.toString());
-    final random = Random();
-    final FileModel song = songs[random.nextInt(songs.length)];
-    AppLogger.info(song.path);
-    return song;
+    if (songs.isNotEmpty) {
+      final random = Random();
+      final FileModel song = songs[random.nextInt(songs.length)];
+      AppLogger.info(song.path);
+      return song;
+    } else {
+      AppLogger.error("No hay canciones guardadas");
+      return null;
+    }
   }
 
   static Future<void> clearAllFiles() async {
