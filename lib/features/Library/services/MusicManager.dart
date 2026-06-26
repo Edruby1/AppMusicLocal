@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app_local_music/core/logger/AppLogger.dart';
 import 'package:app_local_music/features/Library/models/FileModel.dart';
 import 'package:app_local_music/features/Library/repository/FileRepository.dart';
@@ -5,7 +7,10 @@ import 'package:just_audio/just_audio.dart';
 
 enum MusicStatus { playing, paused, stopped }
 
-List<String> lastMusic = [];
+Map<int, String> lastMusic = {};
+
+int songIndex = 0;
+int maxIndex = 0;
 
 class MusicManager {
   static final _player = AudioPlayer();
@@ -32,13 +37,27 @@ class MusicManager {
     });
   }
 
-  static Future<void> play({FileModel? song}) async {
+  static void _addNewSongToList(String id) {
+    int musicId = lastMusic.length + 1;
+    lastMusic[musicId] = id;
+    songIndex = musicId;
+    AppLogger.info("ID cambiada en \"_addNewSongToList\": $songIndex");
+  }
+
+  static Future<void> play({FileModel? song, bool isNewSong = true}) async {
+    AppLogger.info("[PLAY] Intentando reproducir, id actual: $songIndex");
     if (song != null) {
       await _player.setFilePath(song.path);
       _player.play();
       _actualSong = song;
       _status = MusicStatus.playing;
-      lastMusic.add(song.id);
+      if (isNewSong) {
+        _addNewSongToList(song.id);
+        maxIndex++;
+        AppLogger.info(
+          "[PLAY] Añadiendo nueva cancion a la lista. MAX INDEX: $maxIndex",
+        );
+      }
       AppLogger.info("playing ${song.name}");
     } else {
       final newSong = await FileRepository.pickRandom();
@@ -47,7 +66,10 @@ class MusicManager {
         _player.play();
         _actualSong = newSong;
         _status = MusicStatus.playing;
-        lastMusic.add(newSong.id);
+        if (isNewSong) {
+          _addNewSongToList(newSong.id);
+          maxIndex++;
+        }
         AppLogger.info("playing ${newSong.name}");
       } else {
         AppLogger.warn("No tienes canciones guardadas, trata de agregar una");
@@ -79,6 +101,35 @@ class MusicManager {
   }
 
   static Future<void> next() async {
-    play();
+    AppLogger.info("[NEXT] Usando id $songIndex");
+    if (songIndex < maxIndex) {
+      int newIndex = songIndex + 1;
+      AppLogger.info("[NEXT] id usado y modificado $newIndex");
+      final newSong = await FileRepository.getFile(id: lastMusic[newIndex]!);
+      if (newSong != null) {
+        songIndex = newIndex;
+        play(song: newSong, isNewSong: false);
+      } else {
+        AppLogger.warn("No existe esa cancion");
+      }
+    } else {
+      play();
+    }
+  }
+
+  static Future<void> previus() async {
+    AppLogger.info("[PREVIUS] Usando id $songIndex");
+    if (songIndex > 1) {
+      int newIndex = songIndex - 1;
+      AppLogger.info("[PREVIUS] Id modificado y usado $newIndex");
+      if (lastMusic.containsKey(newIndex)) {
+        FileModel? song = await FileRepository.getFile(
+          id: lastMusic[newIndex]!,
+        );
+        if (song == null) return;
+        songIndex = newIndex;
+        play(song: song, isNewSong: false);
+      }
+    }
   }
 }

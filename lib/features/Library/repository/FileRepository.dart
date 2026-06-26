@@ -16,6 +16,17 @@ class FileRepository {
     return files;
   }
 
+  static Future<FileModel?> getFile({required String id}) async {
+    final List<FileModel> files = _box.values.toList();
+    if (files.isEmpty) return null;
+    for (FileModel file in files) {
+      if (file.id == id) {
+        return file;
+      }
+    }
+    return null;
+  }
+
   static Future<void> addFile(String path) async {
     final uuid = Uuid();
     final file = FileModel(id: uuid.v4(), name: p.basename(path), path: path);
@@ -53,11 +64,9 @@ class FileRepository {
 
   static Future<FileModel?> pickRandom() async {
     final List<FileModel> songs = _box.values.toList();
-    AppLogger.info(songs.length.toString());
     if (songs.isNotEmpty) {
       final random = Random();
       final FileModel song = songs[random.nextInt(songs.length)];
-      AppLogger.info(song.path);
       return song;
     } else {
       AppLogger.error("No hay canciones guardadas");

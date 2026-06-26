@@ -1,5 +1,3 @@
-import 'package:app_local_music/core/logger/AppLogger.dart';
-import 'package:app_local_music/features/Library/models/FileModel.dart';
 import 'package:app_local_music/features/Library/repository/FileRepository.dart';
 import 'package:app_local_music/features/Library/services/MusicManager.dart';
 import 'package:file_picker/file_picker.dart';
@@ -99,6 +97,18 @@ class _PlayerScreenState extends State<PlayerScreen> {
                 }
               },
               icon: Icon(Icons.play_arrow),
+            ),
+            IconButton(
+              onPressed: () {
+                MusicManager.next();
+              },
+              icon: Icon(Icons.arrow_right),
+            ),
+            IconButton(
+              onPressed: () {
+                MusicManager.previus();
+              },
+              icon: Icon(Icons.arrow_left),
             ),
           ],
         ),
