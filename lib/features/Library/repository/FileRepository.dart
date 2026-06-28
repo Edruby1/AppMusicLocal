@@ -29,7 +29,12 @@ class FileRepository {
 
   static Future<void> addFile(String path) async {
     final uuid = Uuid();
-    final file = FileModel(id: uuid.v4(), name: p.basename(path), path: path);
+    final file = FileModel(
+      id: uuid.v4(),
+      name: p.basename(path),
+      icon: null,
+      path: path,
+    );
     await _box.add(file);
   }
 
@@ -46,6 +51,7 @@ class FileRepository {
   static Future<void> modifyFile({
     required String id,
     required String? name,
+    required String? icon,
     required String? path,
   }) async {
     for (final key in _box.keys) {
@@ -54,6 +60,7 @@ class FileRepository {
         final updated = FileModel(
           id: file!.id,
           name: name ?? file.name,
+          icon: icon ?? file.icon,
           path: path ?? file.path,
         );
         await _box.put(key, updated);

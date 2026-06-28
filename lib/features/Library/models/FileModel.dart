@@ -8,7 +8,14 @@ class FileModel {
   @HiveField(1)
   final String name;
   @HiveField(2)
+  final String? icon;
+  @HiveField(3)
   final String path;
 
-  FileModel({required this.id, required this.name, required this.path});
+  FileModel({
+    required this.id,
+    required this.name,
+    required this.path,
+    required this.icon,
+  });
 }
