@@ -62,10 +62,15 @@ class FileRepository {
     }
   }
 
-  static Future<FileModel?> pickRandom() async {
+  static Future<FileModel?> pickRandom({String? id}) async {
     final List<FileModel> songs = _box.values.toList();
     if (songs.isNotEmpty) {
       final random = Random();
+      while (id != null && songs.length > 1) {
+        final FileModel song = songs[random.nextInt(songs.length)];
+        if (song.id != id) return song;
+      }
+
       final FileModel song = songs[random.nextInt(songs.length)];
       return song;
     } else {

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:app_local_music/core/logger/AppLogger.dart';
 import 'package:app_local_music/features/Library/models/FileModel.dart';
 import 'package:app_local_music/features/Library/repository/FileRepository.dart';
@@ -8,6 +6,7 @@ import 'package:just_audio/just_audio.dart';
 enum MusicStatus { playing, paused, stopped }
 
 Map<int, String> lastMusic = {};
+String? last;
 
 int songIndex = 0;
 int maxIndex = 0;
@@ -51,6 +50,7 @@ class MusicManager {
       _player.play();
       _actualSong = song;
       _status = MusicStatus.playing;
+      last = song.id;
       if (isNewSong) {
         _addNewSongToList(song.id);
         maxIndex++;
@@ -60,12 +60,13 @@ class MusicManager {
       }
       AppLogger.info("playing ${song.name}");
     } else {
-      final newSong = await FileRepository.pickRandom();
+      final newSong = await FileRepository.pickRandom(id: last);
       if (newSong != null) {
         await _player.setFilePath(newSong.path);
         _player.play();
         _actualSong = newSong;
         _status = MusicStatus.playing;
+        last = newSong.id;
         if (isNewSong) {
           _addNewSongToList(newSong.id);
           maxIndex++;
