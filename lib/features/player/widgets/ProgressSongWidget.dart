@@ -38,6 +38,7 @@ class _ProgressSongWidgetState extends State<ProgressSongWidget> {
       max: duration?.inMilliseconds.toDouble() ?? 1,
 
       onChanged: (v) {
+        if (MusicManager.status == MusicStatus.stopped) return;
         setState(() {
           isDragging = true;
           sliderValue = v;

@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 
 class SongsWidget extends StatefulWidget {
   final FileModel song;
-  const SongsWidget({super.key, required this.song});
+  final DraggableScrollableController controler;
+  const SongsWidget({super.key, required this.song, required this.controler});
 
   @override
   State<SongsWidget> createState() => _SongsWidgetState();
@@ -29,7 +30,15 @@ class _SongsWidgetState extends State<SongsWidget> {
             ),
           ],
         ),
-        onTap: () => MusicManager.play(song: widget.song),
+        onTap: () {
+          widget.controler.animateTo(
+            0.1,
+            duration: Duration(milliseconds: 100),
+            curve: Curves.easeInOut,
+          );
+          MusicManager.changeState(newStatus: MusicStatus.playing);
+          MusicManager.play(song: widget.song);
+        },
       ),
     );
   }

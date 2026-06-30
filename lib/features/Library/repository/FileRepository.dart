@@ -4,12 +4,14 @@ import 'dart:math';
 import 'package:app_local_music/core/logger/AppError.dart';
 import 'package:app_local_music/core/logger/AppLogger.dart';
 import 'package:app_local_music/features/Library/models/FileModel.dart';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
 import 'package:hive_flutter/adapters.dart';
 import 'package:uuid/uuid.dart';
 
 class FileRepository {
   static final Box<FileModel> _box = Hive.box<FileModel>("files");
+  static ValueNotifier<List<FileModel>> music = ValueNotifier([]);
 
   static Future<List<FileModel>> getAllFiles() async {
     final List<FileModel> files = _box.values.toList();
@@ -36,12 +38,14 @@ class FileRepository {
       path: path,
     );
     await _box.add(file);
+    music.value = [...music.value, file];
   }
 
   static Future<void> deleteFile(String id) async {
     for (final file in _box.values) {
       if (file.id == id) {
         await _box.delete(file);
+        music.value.remove(file);
         break;
       }
       throw AppError(msj: "El archivo no se encontro");
@@ -64,6 +68,7 @@ class FileRepository {
           path: path ?? file.path,
         );
         await _box.put(key, updated);
+        music.value[key] = updated;
         break;
       }
     }
@@ -87,6 +92,11 @@ class FileRepository {
   }
 
   static Future<void> clearAllFiles() async {
+    music.value.clear();
     await _box.clear();
+  }
+
+  static Future<void> init() async {
+    music.value = await getAllFiles();
   }
 }

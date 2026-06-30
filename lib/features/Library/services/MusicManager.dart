@@ -36,6 +36,10 @@ class MusicManager {
     });
   }
 
+  static void changeState({required MusicStatus newStatus}) {
+    _status = newStatus;
+  }
+
   static void _addNewSongToList(String id) {
     int musicId = lastMusic.length + 1;
     lastMusic[musicId] = id;

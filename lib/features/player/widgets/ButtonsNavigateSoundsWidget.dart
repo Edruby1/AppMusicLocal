@@ -12,7 +12,6 @@ class ButtonsNavigateSoundsWidget extends StatefulWidget {
 
 class _ButtonsNavigateSoundsWidgetState
     extends State<ButtonsNavigateSoundsWidget> {
-  MusicStatus status = MusicStatus.stopped;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -28,25 +27,19 @@ class _ButtonsNavigateSoundsWidgetState
           ),
           IconButton(
             onPressed: () async {
-              if (status == MusicStatus.playing) {
+              if (MusicManager.status == MusicStatus.playing) {
                 await MusicManager.pause();
-                setState(() {
-                  status = MusicStatus.paused;
-                });
-              } else if (status == MusicStatus.paused) {
+                MusicManager.changeState(newStatus: MusicStatus.paused);
+              } else if (MusicManager.status == MusicStatus.paused) {
                 await MusicManager.resume();
-                setState(() {
-                  status = MusicStatus.playing;
-                });
+                MusicManager.changeState(newStatus: MusicStatus.playing);
               } else {
                 final statusPermission = await Permission.audio.request();
                 if (statusPermission == PermissionStatus.granted) {
                   MusicManager.play();
                   await Future.delayed(const Duration(milliseconds: 500));
-                  setState(() {
-                    if (!MusicManager.isPlaying) return;
-                    status = MusicStatus.playing;
-                  });
+                  if (!MusicManager.isPlaying) return;
+                  MusicManager.changeState(newStatus: MusicStatus.playing);
                 }
               }
             },

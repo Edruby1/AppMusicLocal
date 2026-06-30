@@ -28,6 +28,8 @@ class _AppLoaderState extends State<AppLoader> {
 
     await Hive.openBox<FileModel>("files");
 
+    FileRepository.init();
+
     //await FileRepository.clearAllFiles();
 
     await MusicManager.init();

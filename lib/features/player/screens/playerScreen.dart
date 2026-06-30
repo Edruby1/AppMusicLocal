@@ -1,13 +1,9 @@
-import 'package:app_local_music/core/widgets/SongsWidget.dart';
-import 'package:app_local_music/features/Library/models/FileModel.dart';
 import 'package:app_local_music/features/Library/repository/FileRepository.dart';
-import 'package:app_local_music/features/Library/services/MusicManager.dart';
 import 'package:app_local_music/features/player/widgets/ButtonsNavigateSoundsWidget.dart';
 import 'package:app_local_music/features/player/widgets/MusicListWidget.dart';
 import 'package:app_local_music/features/player/widgets/ProgressSongWidget.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({super.key});

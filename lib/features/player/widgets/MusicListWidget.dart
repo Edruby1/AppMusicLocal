@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app_local_music/core/widgets/SongsWidget.dart';
 import 'package:app_local_music/features/Library/models/FileModel.dart';
 import 'package:app_local_music/features/Library/repository/FileRepository.dart';
@@ -11,32 +13,103 @@ class MusicListWidget extends StatefulWidget {
 }
 
 class _MusicListWidgetState extends State<MusicListWidget> {
+  final DraggableScrollableController controller =
+      DraggableScrollableController();
+
+  bool isStretch = false;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: FutureBuilder(
-        future: FileRepository.getAllFiles(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            final List<FileModel> music = snapshot.data ?? [];
-            return DraggableScrollableSheet(
-              initialChildSize: 0.1,
-              minChildSize: 0.1,
-              maxChildSize: 0.5,
-              builder: (context, scrollController) {
-                return ListView.builder(
-                  controller: scrollController,
-                  itemCount: music.length,
-                  itemBuilder: (context, index) {
-                    return SongsWidget(song: music[index]);
-                  },
-                );
-              },
+      child: ValueListenableBuilder(
+        valueListenable: FileRepository.music,
+        builder: (context, music, _) {
+          if (music.isEmpty) {
+            return Align(
+              alignment: AlignmentGeometry.bottomEnd,
+              child: SizedBox(
+                height: 75,
+                width: double.infinity,
+                child: Container(
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const Text(
+                      "No tienes musica",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             );
-          } else {
-            return CircularProgressIndicator();
           }
+          return DraggableScrollableSheet(
+            controller: controller,
+            initialChildSize: 0.1,
+            minChildSize: 0.1,
+            maxChildSize: 0.3,
+            builder: (context, scrollController) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: ListView.builder(
+                  controller: scrollController,
+                  itemCount: music.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: Container(
+                                height: 4,
+                                width: 250,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Text(
+                              "Tu musica",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 38,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 8, right: 8),
+                      child: SongsWidget(
+                        song: music[index - 1],
+                        controler: controller,
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          );
         },
       ),
     );
