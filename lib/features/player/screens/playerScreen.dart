@@ -1,3 +1,4 @@
+import 'package:app_local_music/core/AppColors.dart';
 import 'package:app_local_music/features/Library/repository/FileRepository.dart';
 import 'package:app_local_music/features/player/widgets/ButtonsNavigateSoundsWidget.dart';
 import 'package:app_local_music/features/player/widgets/MusicListWidget.dart';
@@ -16,9 +17,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       body: body(),
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: AppColors.accent,
         actions: [IconButton(onPressed: () {}, icon: Icon(Icons.more_vert))],
       ),
       floatingActionButton: FloatingActionButton(
@@ -27,8 +29,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
           if (path == null) return;
           await FileRepository.addFile(path.paths.first!);
         },
-        backgroundColor: Colors.red,
-        child: Icon(Icons.add, color: Colors.white),
+        backgroundColor: AppColors.accent,
+        child: Icon(Icons.add, color: AppColors.icons),
       ),
     );
   }

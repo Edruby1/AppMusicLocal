@@ -1,3 +1,4 @@
+import 'package:app_local_music/core/AppColors.dart';
 import 'package:app_local_music/features/Library/services/MusicManager.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -23,7 +24,7 @@ class _ButtonsNavigateSoundsWidgetState
             onPressed: () {
               MusicManager.previus();
             },
-            icon: Icon(Icons.skip_previous),
+            icon: Icon(Icons.skip_previous, color: AppColors.icons),
           ),
           IconButton(
             onPressed: () async {
@@ -43,13 +44,13 @@ class _ButtonsNavigateSoundsWidgetState
                 }
               }
             },
-            icon: Icon(Icons.play_arrow),
+            icon: Icon(Icons.play_arrow, color: AppColors.icons),
           ),
           IconButton(
             onPressed: () {
               MusicManager.next();
             },
-            icon: Icon(Icons.skip_next),
+            icon: Icon(Icons.skip_next, color: AppColors.icons),
           ),
         ],
       ),

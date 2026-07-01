@@ -1,7 +1,5 @@
-import 'dart:io';
-
+import 'package:app_local_music/core/AppColors.dart';
 import 'package:app_local_music/core/widgets/SongsWidget.dart';
-import 'package:app_local_music/features/Library/models/FileModel.dart';
 import 'package:app_local_music/features/Library/repository/FileRepository.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +32,7 @@ class _MusicListWidgetState extends State<MusicListWidget> {
                 child: Container(
                   clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: AppColors.surface,
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                   ),
                   child: Padding(
@@ -60,7 +58,7 @@ class _MusicListWidgetState extends State<MusicListWidget> {
             builder: (context, scrollController) {
               return Container(
                 decoration: BoxDecoration(
-                  color: Colors.red,
+                  color: AppColors.surface,
                   borderRadius: const BorderRadius.all(Radius.circular(20)),
                 ),
                 clipBehavior: Clip.antiAlias,
@@ -79,19 +77,20 @@ class _MusicListWidgetState extends State<MusicListWidget> {
                                 height: 4,
                                 width: 250,
                                 decoration: BoxDecoration(
-                                  color: Colors.black,
+                                  color: AppColors.separator,
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(20),
                                   ),
                                 ),
                               ),
                             ),
-                            const Text(
+                            Text(
                               "Tu musica",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 38,
                                 fontWeight: FontWeight.bold,
+                                color: AppColors.text,
                               ),
                             ),
                           ],

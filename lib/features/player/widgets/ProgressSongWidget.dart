@@ -1,3 +1,4 @@
+import 'package:app_local_music/core/AppColors.dart';
 import 'package:app_local_music/features/Library/services/MusicManager.dart';
 import 'package:flutter/material.dart';
 
@@ -33,25 +34,36 @@ class _ProgressSongWidgetState extends State<ProgressSongWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Slider(
-      value: sliderValue ?? position?.inMilliseconds.toDouble() ?? 0,
-      max: duration?.inMilliseconds.toDouble() ?? 1,
+    return SliderTheme(
+      data: SliderThemeData(
+        thumbShape: const RoundSliderOverlayShape(overlayRadius: 6),
 
-      onChanged: (v) {
-        if (MusicManager.status == MusicStatus.stopped) return;
-        setState(() {
-          isDragging = true;
-          sliderValue = v;
-        });
-      },
+        activeTrackColor: AppColors.progress,
+        inactiveTrackColor: AppColors.rest,
+        overlayColor: Colors.transparent,
+        thumbColor: AppColors.progress,
+        showValueIndicator: ShowValueIndicator.alwaysVisible,
+      ),
+      child: Slider(
+        value: sliderValue ?? position?.inMilliseconds.toDouble() ?? 0,
+        max: duration?.inMilliseconds.toDouble() ?? 1,
 
-      onChangeEnd: (v) async {
-        setState(() {
-          isDragging = false;
-          sliderValue = null;
-        });
-        await MusicManager.seek(Duration(milliseconds: v.toInt()));
-      },
+        onChanged: (v) {
+          if (MusicManager.status == MusicStatus.stopped) return;
+          setState(() {
+            isDragging = true;
+            sliderValue = v;
+          });
+        },
+
+        onChangeEnd: (v) async {
+          setState(() {
+            isDragging = false;
+            sliderValue = null;
+          });
+          await MusicManager.seek(Duration(milliseconds: v.toInt()));
+        },
+      ),
     );
   }
 }
