@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:app_local_music/core/logger/AppError.dart';
 import 'package:app_local_music/core/logger/AppLogger.dart';
 import 'package:app_local_music/features/Library/models/FileModel.dart';
 import 'package:flutter/material.dart';
