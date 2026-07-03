@@ -42,14 +42,16 @@ class FileRepository {
   }
 
   static Future<void> deleteFile(String id) async {
-    for (final file in _box.values) {
-      if (file.id == id) {
-        await _box.delete(file);
-        music.value.remove(file);
-        break;
+    for (final key in _box.keys) {
+      final file = _box.get(key);
+      if (file?.id == id) {
+        await _box.delete(key);
+        music.value = [...music.value]..remove(file);
+        return;
       }
-      throw AppError(msj: "El archivo no se encontro");
     }
+    AppLogger.error("Archivo no encontrado");
+    //throw AppError(msj: "El archivo no se encontro");
   }
 
   static Future<void> modifyFile({
@@ -68,7 +70,15 @@ class FileRepository {
           path: path ?? file.path,
         );
         await _box.put(key, updated);
-        music.value[key] = updated;
+        final list = [...music.value];
+        final index = list.indexWhere((e) => e.id == id);
+
+        if (index != -1) {
+          list[index] = updated;
+        }
+
+        music.value = list;
+
         break;
       }
     }
@@ -92,7 +102,7 @@ class FileRepository {
   }
 
   static Future<void> clearAllFiles() async {
-    music.value.clear();
+    music.value = [];
     await _box.clear();
   }
 

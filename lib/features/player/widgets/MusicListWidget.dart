@@ -102,6 +102,7 @@ class _MusicListWidgetState extends State<MusicListWidget> {
                       child: SongsWidget(
                         song: music[index - 1],
                         controler: controller,
+                        scroll: scrollController,
                       ),
                     );
                   },

@@ -1,6 +1,7 @@
 import 'package:app_local_music/core/logger/AppLogger.dart';
 import 'package:app_local_music/features/Library/models/FileModel.dart';
 import 'package:app_local_music/features/Library/repository/FileRepository.dart';
+import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 
 enum MusicStatus { playing, paused, stopped }
@@ -28,6 +29,8 @@ class MusicManager {
 
   static bool get isPlaying => _player.playing;
 
+  static final ValueNotifier<FileModel?> actualSongEvent = ValueNotifier(null);
+
   static Future<void> init() async {
     _player.playerStateStream.listen((state) {
       if (state.processingState == ProcessingState.completed) {
@@ -54,6 +57,7 @@ class MusicManager {
       _player.play();
       _actualSong = song;
       _status = MusicStatus.playing;
+      actualSongEvent.value = song;
       last = song.id;
       if (isNewSong) {
         _addNewSongToList(song.id);
@@ -70,6 +74,7 @@ class MusicManager {
         _player.play();
         _actualSong = newSong;
         _status = MusicStatus.playing;
+        actualSongEvent.value = newSong;
         last = newSong.id;
         if (isNewSong) {
           _addNewSongToList(newSong.id);

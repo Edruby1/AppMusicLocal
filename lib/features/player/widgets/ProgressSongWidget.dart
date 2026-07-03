@@ -34,36 +34,63 @@ class _ProgressSongWidgetState extends State<ProgressSongWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SliderTheme(
-      data: SliderThemeData(
-        thumbShape: const RoundSliderOverlayShape(overlayRadius: 6),
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Text(
+            timeReformat(position ?? Duration()),
+            style: TextStyle(color: AppColors.text),
+          ),
+        ),
+        Expanded(
+          child: SliderTheme(
+            data: SliderThemeData(
+              thumbShape: const RoundSliderOverlayShape(overlayRadius: 6),
 
-        activeTrackColor: AppColors.progress,
-        inactiveTrackColor: AppColors.rest,
-        overlayColor: Colors.transparent,
-        thumbColor: AppColors.progress,
-        showValueIndicator: ShowValueIndicator.alwaysVisible,
-      ),
-      child: Slider(
-        value: sliderValue ?? position?.inMilliseconds.toDouble() ?? 0,
-        max: duration?.inMilliseconds.toDouble() ?? 1,
+              activeTrackColor: AppColors.progress,
+              inactiveTrackColor: AppColors.rest,
+              overlayColor: Colors.transparent,
+              thumbColor: AppColors.progress,
+              showValueIndicator: ShowValueIndicator.alwaysVisible,
+            ),
+            child: Slider(
+              value: sliderValue ?? position?.inMilliseconds.toDouble() ?? 0,
+              max: duration?.inMilliseconds.toDouble() ?? 1,
 
-        onChanged: (v) {
-          if (MusicManager.status == MusicStatus.stopped) return;
-          setState(() {
-            isDragging = true;
-            sliderValue = v;
-          });
-        },
+              onChanged: (v) {
+                if (MusicManager.status == MusicStatus.stopped) return;
+                setState(() {
+                  isDragging = true;
+                  sliderValue = v;
+                });
+              },
 
-        onChangeEnd: (v) async {
-          setState(() {
-            isDragging = false;
-            sliderValue = null;
-          });
-          await MusicManager.seek(Duration(milliseconds: v.toInt()));
-        },
-      ),
+              onChangeEnd: (v) async {
+                setState(() {
+                  isDragging = false;
+                  sliderValue = null;
+                });
+                await MusicManager.seek(Duration(milliseconds: v.toInt()));
+              },
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: Text(
+            timeReformat(duration ?? Duration()),
+            style: TextStyle(color: AppColors.text),
+          ),
+        ),
+      ],
     );
+  }
+
+  String timeReformat(Duration time) {
+    final minutes = time.inMinutes;
+    final seconds = time.inSeconds % 60;
+
+    return "$minutes:${seconds.toString().padLeft(2, "0")}";
   }
 }

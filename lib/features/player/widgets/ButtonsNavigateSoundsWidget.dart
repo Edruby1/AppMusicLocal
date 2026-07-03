@@ -3,6 +3,9 @@ import 'package:app_local_music/features/Library/services/MusicManager.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+// ignore: constant_identifier_names
+enum ReproductorIcons { play_arrow, pause }
+
 class ButtonsNavigateSoundsWidget extends StatefulWidget {
   const ButtonsNavigateSoundsWidget({super.key});
 
@@ -13,6 +16,8 @@ class ButtonsNavigateSoundsWidget extends StatefulWidget {
 
 class _ButtonsNavigateSoundsWidgetState
     extends State<ButtonsNavigateSoundsWidget> {
+  ReproductorIcons actualIcon = ReproductorIcons.play_arrow;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -31,9 +36,15 @@ class _ButtonsNavigateSoundsWidgetState
               if (MusicManager.status == MusicStatus.playing) {
                 await MusicManager.pause();
                 MusicManager.changeState(newStatus: MusicStatus.paused);
+                setState(() {
+                  actualIcon = ReproductorIcons.play_arrow;
+                });
               } else if (MusicManager.status == MusicStatus.paused) {
                 await MusicManager.resume();
                 MusicManager.changeState(newStatus: MusicStatus.playing);
+                setState(() {
+                  actualIcon = ReproductorIcons.pause;
+                });
               } else {
                 final statusPermission = await Permission.audio.request();
                 if (statusPermission == PermissionStatus.granted) {
@@ -41,10 +52,13 @@ class _ButtonsNavigateSoundsWidgetState
                   await Future.delayed(const Duration(milliseconds: 500));
                   if (!MusicManager.isPlaying) return;
                   MusicManager.changeState(newStatus: MusicStatus.playing);
+                  setState(() {
+                    actualIcon = ReproductorIcons.pause;
+                  });
                 }
               }
             },
-            icon: Icon(Icons.play_arrow, color: AppColors.icons),
+            icon: Icon(getIcon(actualIcon), color: AppColors.icons),
           ),
           IconButton(
             onPressed: () {
@@ -55,5 +69,14 @@ class _ButtonsNavigateSoundsWidgetState
         ],
       ),
     );
+  }
+
+  IconData getIcon(ReproductorIcons icon) {
+    switch (icon) {
+      case ReproductorIcons.play_arrow:
+        return Icons.play_arrow;
+      case ReproductorIcons.pause:
+        return Icons.pause;
+    }
   }
 }
