@@ -33,4 +33,4 @@ Download the latest Android APK from the **Releases** section.
 
 ## Follow the project
 
-TikTok: https://www.tiktok.com/@edrubys
+TikTok: https://www.tiktok.com/@off_devs
