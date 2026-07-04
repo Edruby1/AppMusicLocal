@@ -7,10 +7,9 @@ LocalMusic is a simple music player for **Android** that plays your local MP3 fi
 ## Screenshots
 
 <p float="left">
-  <img src="img1.png" width="45%" />
-  <img src="img2.png" width="45%" />
+  <img src="https://github.com/user-attachments/assets/a07f030f-1e87-4f86-bde4-74c992554249" width="45%" style="margin-right: 10px;" />
+  <img src="https://github.com/user-attachments/assets/e00e0de5-245d-4e18-a57d-e2254b115008" width="45%" />
 </p>
-
 
 ## Features
 
